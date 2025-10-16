@@ -25,7 +25,7 @@ router.post("/register", async (req, res) => {
 
     // Create and send token
     const token = createToken({ id: user.id });
-    res.status(201).send({ token });
+    res.status(201).send(token);
   } catch (error) {
     // Handle unique constraint violation for username
     if (error.code === "23505") {
@@ -59,7 +59,7 @@ router.post("/login", async (req, res) => {
 
     // Create and send token
     const token = createToken({ id: user.id });
-    res.send({ token });
+    res.send(token);
   } catch (error) {
     throw error;
   }

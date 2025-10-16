@@ -6,6 +6,7 @@ import {
   createPlaylist,
   getPlaylistById,
   getPlaylistsByUserId,
+  getPlaylistWithTracks,
 } from "#db/queries/playlists";
 import { createPlaylistTrack } from "#db/queries/playlists_tracks";
 import { getTracksByPlaylistId } from "#db/queries/tracks";
@@ -46,9 +47,10 @@ router.param("id", async (req, res, next, id) => {
   next();
 });
 
-// GET /playlists/:id sends 403 error if the user does not own the playlist
-router.route("/:id").get((req, res) => {
-  res.send(req.playlist);
+// GET /playlists/:id sends specific playlist, including all tracks
+router.route("/:id").get(async (req, res) => {
+  const playlistWithTracks = await getPlaylistWithTracks(req.playlist.id);
+  res.send(playlistWithTracks);
 });
 
 router

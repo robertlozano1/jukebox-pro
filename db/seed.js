@@ -1,4 +1,5 @@
 import db from "#db/client";
+import bcrypt from "bcrypt";
 
 import { createPlaylist } from "#db/queries/playlists";
 import { createPlaylistTrack } from "#db/queries/playlists_tracks";
@@ -11,9 +12,13 @@ await db.end();
 console.log("🌱 Database seeded.");
 
 async function seed() {
-  // Create users first
-  const user1 = await createUser("musiclover1", "password123");
-  const user2 = await createUser("playlistpro", "securepass456");
+  // Create users first with hashed passwords
+  const saltRounds = 10;
+  const hashedPassword1 = await bcrypt.hash("password123", saltRounds);
+  const hashedPassword2 = await bcrypt.hash("securepass456", saltRounds);
+
+  const user1 = await createUser("musiclover1", hashedPassword1);
+  const user2 = await createUser("playlistpro", hashedPassword2);
 
   // Create tracks (we need at least 10 tracks for 2 playlists with 5+ tracks each)
   for (let i = 1; i <= 20; i++) {
